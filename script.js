@@ -114,6 +114,38 @@ document.querySelectorAll(".btn-produtor").forEach(function (botao) {
 
 });
 
+/* =======================================================
+   CONTROLE DO BLOCO DE BLOG E FILTROS DE CATEGORIA
+   ======================================================= */
+
+document.addEventListener("DOMContentLoaded", function () {
+    const filterButtons = document.querySelectorAll(".blog-filter");
+    const blogItems = document.querySelectorAll(".blog-card, .blog-featured");
+
+    function setActiveFilter(button) {
+        filterButtons.forEach(function (btn) {
+            btn.classList.toggle("active", btn === button);
+        });
+    }
+
+    function filterBlog(category) {
+        blogItems.forEach(function (item) {
+            if (category === "all" || item.dataset.category === category) {
+                item.classList.remove("hidden");
+            } else {
+                item.classList.add("hidden");
+            }
+        });
+    }
+
+    filterButtons.forEach(function (button) {
+        button.addEventListener("click", function () {
+            setActiveFilter(button);
+            filterBlog(button.dataset.category);
+        });
+    });
+});
+
 
 /* =======================================================
    TEMPO DE PERMANÊNCIA NA PÁGINA
@@ -122,9 +154,6 @@ document.querySelectorAll(".btn-produtor").forEach(function (botao) {
 
 // Marca o tempo inicial
 const tempoInicio = Date.now();
-
-// Quando o usuário sai da página
-window.addEventListener("beforeunload", function () {
 
     // Calcula tempo total em segundos
     const tempoTotal = Math.floor((Date.now() - tempoInicio) / 1000);
