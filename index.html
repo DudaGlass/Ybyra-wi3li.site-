@@ -1,4 +1,4 @@
-ÓIA Films.png<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-br">
 
 <head>
@@ -26,43 +26,70 @@
 
 <!-- ================= NAVBAR ================= -->
 
-<nav id="navbar" class="navbar navbar-expand-lg fixed-top bg-white shadow-sm">
-<!-- Navbar fixa no topo -->
-<div class="container nav-shell">
-  <div class="nav-brand-wrap">
-    <a class="navbar-brand nav-brand" href="index.html">
-      <img src="Ybyracasting.png" class="brand-logo" alt="Ybyrá Casting">
-    </a>
-  </div>
-  <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu" aria-label="Menu">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="menu">
-    <ul class="navbar-nav nav-links">
-
-<li class="nav-item">
-<a class="nav-link" href="#hero">Home</a>
-</li>
-
-<li class="nav-item">
-<a class="nav-link" href="#servicos">Serviços</a>
-</li>
-
-<li class="nav-item">
-<a class="nav-link" href="#sobre">Sobre</a>
-</li>
-
-<li class="nav-item">
-<a class="nav-link" href="#contato">Contato</a>
-</li>
-
-<li class="nav-item">
-<a class="nav-link" href="#blog">Blog</a>
-</li>
-</ul>
-</div>
-</div>
-</nav>
+<header>
+  <nav id="navbar" class="navbar navbar-expand-lg fixed-top bg-white shadow-sm" role="navigation" aria-label="Navegação principal">
+    <div class="container">
+      <div class="navbar-layout">
+        
+        <!-- Logo - Âncora na extrema esquerda -->
+        <div class="navbar-brand-container">
+          <a href="index.html" class="navbar-brand" aria-label="Ybyrá Casting - Página inicial">
+            <img src="Ybyracasting.png" class="brand-logo" alt="Ybyrá Casting" width="130" height="auto">
+          </a>
+        </div>
+        
+        <!-- Botão mobile -->
+        <button 
+          class="navbar-toggler" 
+          type="button" 
+          data-bs-toggle="collapse" 
+          data-bs-target="#primary-navigation" 
+          aria-controls="primary-navigation" 
+          aria-expanded="false"
+          aria-label="Alternar menu de navegação"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <!-- Navegação centralizada -->
+        <div class="collapse navbar-collapse" id="primary-navigation">
+          <ul class="navbar-nav primary-menu" role="menubar">
+            
+            <li class="nav-item" role="none">
+              <a href="#hero" class="nav-link" role="menuitem">Home</a>
+            </li>
+            
+            <li class="nav-item" role="none">
+              <a href="#servicos" class="nav-link" role="menuitem">Serviços</a>
+            </li>
+            
+            <li class="nav-item" role="none">
+              <a href="#sobre" class="nav-link" role="menuitem">Sobre</a>
+            </li>
+            
+            <li class="nav-item" role="none">
+              <a href="#contato" class="nav-link" role="menuitem">Contato</a>
+            </li>
+            
+            <li class="nav-item" role="none">
+              <a href="#projetos" class="nav-link" role="menuitem">Projetos</a>
+            </li>
+            
+            <li class="nav-item" role="none">
+              <a href="#blog" class="nav-link" role="menuitem">Blog</a>
+            </li>
+            
+            <li class="nav-item" role="none">
+              <a href="#parceiros" class="nav-link" role="menuitem">Parceiros</a>
+            </li>
+            
+          </ul>
+        </div>
+        
+      </div>
+    </div>
+  </nav>
+</header>
 
 
 <!-- ================= HERO ================= -->
@@ -80,8 +107,11 @@
     </p>
 
     <div class="mt-5 hero-cta">
-      <a href="#sobre" class="btn btn-hero">
+      <a href="#contato" class="btn btn-hero me-3 mb-3">
         Solicitar Elenco
+      </a>
+      <a href="#casting" class="btn btn-hero mb-3">
+        Inscreva-se no casting
       </a>
     </div>
   </div>
@@ -103,22 +133,22 @@
     <article class="service-card">
       <div class="service-card-icon"><i class="fa-solid fa-user-tie"></i></div>
       <h3>Curadoria de perfis</h3>
-      <p>Selecionamos talentos com perfil profissional e a imagem certa para cada projeto cultural e audiovisual.</p>
+      <p></p>
     </article>
     <article class="service-card">
       <div class="service-card-icon"><i class="fa-solid fa-calendar-check"></i></div>
       <h3>Organização de agenda</h3>
-      <p>Planejamos compromissos, ensaios e apresentações para garantir execução sem conflitos e com eficiência.</p>
+      <p></p>
     </article>
     <article class="service-card">
       <div class="service-card-icon"><i class="fa-solid fa-clapperboard"></i></div>
       <h3>Suporte à produção</h3>
-      <p>Oferecemos acompanhamento completo na logística de equipe, locação e gestão do elenco em cena.</p>
+      <p></p>
     </article>
     <article class="service-card">
       <div class="service-card-icon"><i class="fa-solid fa-hand-holding-dollar"></i></div>
       <h3>Suporte ao financeiro</h3>
-      <p>Facilitamos orçamentos, pagamentos e processos financeiros para projetos com transparência e agilidade.</p>
+      <p></p>
     </article>
   </div>
 
@@ -135,7 +165,7 @@
       <div class="sobre-main">
         <span class="sobre-label">Sobre</span>
         <div class="sobre-title-group">
-          <h2>Sobre o Ybyrá Casting</h2>
+          <h2>O Ybyrá Casting</h2>
           <div class="sobre-title-line"></div>
         </div>
         <p class="sobre-lead">Curadoria e desenvolvimento de talentos para o setor cultural e audiovisual</p>
@@ -151,11 +181,6 @@
     </div>
   </div>
 </section>
-
-<div class="section-actions text-center" style="margin: 2rem 0 3rem;">
-  <a class="btn btn-hero me-3 mb-3" href="#contato">Solicitar elenco</a>
-  <a class="btn btn-hero mb-3" href="#casting">Inscreva-se no casting</a>
-</div>
 
 <div id="casting"></div>
 
@@ -198,9 +223,8 @@
           </div>
         </div>
         <div class="project-card-copy">
-          <span class="project-card-label">Festival regional</span>
+          
           <h3>O QUE É <span class="highlight">CIDADANIA?</span> – ALEMS</h3>
-          <p>Atuação institucional que une linguagem cultural, elenco estratégico e produção para reforçar mensagens de cidadania.</p>
           <span class="project-card-action">Ver projeto</span>
         </div>
       </a>
@@ -211,9 +235,8 @@
           </div>
         </div>
         <div class="project-card-copy">
-          <span class="project-card-label">Institucional</span>
+          
           <h3>INSTITUCIONAL HOTEL <span class="highlight">DEVILLE</span></h3>
-          <p>Projeto de conteúdo com seleção de talentos e imagem de marca elegante para posicionamento audiovisual sofisticado.</p>
           <span class="project-card-action">Ver projeto</span>
         </div>
       </a>
@@ -224,9 +247,8 @@
           </div>
         </div>
         <div class="project-card-copy">
-          <span class="project-card-label">Campanha</span>
+        
           <h3>CAMPANHA DE <span class="highlight">NATAL 2025</span> – SEBRAE</h3>
-          <p>Experiência de elenco e direção de arte pensada para conectar talento, emoção e visibilidade no segmento cultural.</p>
           <span class="project-card-action">Ver projeto</span>
         </div>
       </a>
@@ -237,9 +259,8 @@
           </div>
         </div>
         <div class="project-card-copy">
-          <span class="project-card-label">Performance</span>
+          
           <h3>RAÍZES EM <span class="highlight">TECIDO</span></h3>
-          <p>Projeto editorial que integra talentos, cenário e storytelling para transmitir uma estética artesanal e contemporânea.</p>
           <span class="project-card-action">Ver projeto</span>
         </div>
       </a>
@@ -257,14 +278,7 @@
       <p>Área estratégica para fortalecer autoridade no setor cultural e audiovisual</p>
     </div>
 
-    <div class="blog-filters" aria-label="Filtrar artigos por categoria">
-      <button class="blog-filter active" data-category="all" type="button">Todos</button>
-      <button class="blog-filter" data-category="noticias" type="button">Notícias do setor</button>
-      <button class="blog-filter" data-category="projetos" type="button">Projetos realizados</button>
-      <button class="blog-filter" data-category="bastidores" type="button">Bastidores</button>
-      <button class="blog-filter" data-category="educativo" type="button">Conteúdo educativo</button>
-      <button class="blog-filter" data-category="editais" type="button">Editais e oportunidades</button>
-    </div>
+
 
     <article class="blog-featured" data-category="noticias">
       <div class="featured-media">
@@ -274,89 +288,49 @@
           <span class="featured-tag">Notícias</span>
           <h3>Entrevista exclusiva com profissionais que definem a cultura do audiovisual</h3>
           <p>Conheça tendências, posicionamento estratégico e oportunidades para talentos no mercado nacional.</p>
-          <a href="#" class="btn btn-hero blog-cta">Ler mais</a>
+          <div class="blog-cta-wrapper">
+            <a href="#" class="btn btn-hero blog-cta">Ler mais</a>
+          </div>
         </div>
       </div>
     </article>
-
+    
     <div class="blog-grid">
-      <article class="blog-card" data-category="projetos">
-        <div class="card-media">
-          <img src="" alt="Projeto cultural destacado" loading="lazy">
-        </div>
-        <div class="card-copy">
-          <span class="card-tag">Projetos realizados</span>
-          <h3>Projeto de cinema experimental fortalece narrativas locais</h3>
-          <p>Uma produção que conecta talentos regionais com marcas culturais e amplia a visibilidade artística.</p>
-          <a href="#" class="btn btn-outline-dark blog-cta">Ler mais</a>
-        </div>
-      </article>
-
-      <article class="blog-card" data-category="bastidores">
-        <div class="card-media">
-          <img src="./1000341973.png" alt="Bastidores de produção audiovisual" loading="lazy">
-        </div>
-        <div class="card-copy">
-          <span class="card-tag">Bastidores</span>
-          <h3>O que acontece por trás das câmeras em grandes produções</h3>
-          <p>Fique por dentro dos processos criativos, desafios de set e a importância da curadoria de talentos.</p>
-          <a href="#" class="btn btn-outline-dark blog-cta">Ler mais</a>
-        </div>
-      </article>
-
-      <article class="blog-card" data-category="educativo">
-        <div class="card-media">
-          <img src="./1000341974.png" alt="Conteúdo educativo para artistas" loading="lazy">
-        </div>
-        <div class="card-copy">
-          <span class="card-tag">Conteúdo educativo</span>
-          <h3>Como artistas podem construir carreiras consistentes no audiovisual</h3>
-          <p>Dicas práticas de posicionamento, networking e desenvolvimento profissional para talentos criativos.</p>
-          <a href="#" class="btn btn-outline-dark blog-cta">Ler mais</a>
-        </div>
-      </article>
-
-      <article class="blog-card" data-category="editais">
-        <div class="card-media">
-          <img src="./1000341975.png" alt="Editais e oportunidades culturais" loading="lazy">
-        </div>
-        <div class="card-copy">
-          <span class="card-tag">Editais e oportunidades</span>
-          <h3>Editais abertos que fazem diferença para talentos e produtores</h3>
-          <p>Seleção de oportunidades segmentadas para artistas, produtores e iniciativas culturais.</p>
-          <a href="#" class="btn btn-outline-dark blog-cta">Ler mais</a>
-        </div>
-      </article>
-
-      <article class="blog-card" data-category="noticias">
-        <div class="card-media">
-          <img src="./Ybyra.lab.jpeg" alt="Notícias do setor cultural" loading="lazy">
-        </div>
-        <div class="card-copy">
-          <span class="card-tag">Notícias do setor</span>
-          <h3>Novas tendências de casting que estão transformando o mercado</h3>
-          <p>Uma visão estratégica sobre como o mercado audiovisual está se renovando com curadoria e gestão de talentos.</p>
-          <a href="#" class="btn btn-outline-dark blog-cta">Ler mais</a>
-        </div>
-      </article>
+      <!-- Blog cards removidos  -->
     </div>
   </div>
 </section>
-
 <section id="parceiros" class="parceiros section">
   <div class="container">
     <div class="section-head text-center">
       <h2>Nossos Parceiros</h2>
     </div>
-    <div class="parceiros-grid">
-      <div class="parceiro-card">
-        <img src="./ÓIA Films.png" alt="ÓIA Films" loading="lazy">
-      </div>
-      <div class="parceiro-card">
-        <img src="./FASHION HUB.png" alt="Fashion Hub" loading="lazy">
-      </div>
-      <div class="parceiro-card">
-        <img src="./VITRINE DO MATO.png" alt="Vitrine do Mato" loading="lazy">
+    
+    <!-- Carousel Container -->
+    <div class="parceiros-carousel-container" style="background-color: #fff;">
+      <!-- Infinite Carousel Track -->
+      <div class="parceiros-carousel-track">
+        <!-- Original Set -->
+        <div class="parceiro-card">
+          <img src="./ÓIA Films.png" alt="ÓIA Films" loading="lazy">
+        </div>
+        <div class="parceiro-card">
+          <img src="./FASHION HUB.png" alt="Fashion Hub" loading="lazy">
+        </div>
+        <div class="parceiro-card">
+          <img src="./VITRINE DO MATO.png" alt="Vitrine do Mato" loading="lazy">
+        </div>
+        
+        <!-- Duplicated Set for Infinite Scroll -->
+        <div class="parceiro-card">
+          <img src="./ÓIA Films.png" alt="ÓIA Films" loading="lazy">
+        </div>
+        <div class="parceiro-card">
+          <img src="./FASHION HUB.png" alt="Fashion Hub" loading="lazy">
+        </div>
+        <div class="parceiro-card">
+          <img src="./VITRINE DO MATO.png" alt="Vitrine do Mato" loading="lazy">
+        </div>
       </div>
     </div>
   </div>
@@ -369,8 +343,10 @@
 
 <div class="container text-center">
 
-<p>
-Ybyrá Casting — Curadoria, formação e produção cultural de talentos.
+
+
+<p class="copyright">
+ © 2024 Ybyrá Casting — Curadoria, formação e produção cultural de talentos. Todos os direitos reservados.
 </p>
 
 </div>
@@ -464,6 +440,28 @@ fetch("https://api.ybyra.com/metricas/produtor")
 
 <!-- JS do projeto -->
 <script src="script.js"></script>
+
+<!-- Smooth Scroll with Offset -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Handle smooth scrolling for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        const navbarHeight = document.querySelector('#navbar').offsetHeight;
+        const targetPosition = target.offsetTop - navbarHeight - 20;
+        
+        window.scrollTo({
+          top: targetPosition,
+          behavior: 'smooth'
+        });
+      }
+    });
+  });
+});
+</script>
 
 
 </body>
