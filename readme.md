@@ -6,7 +6,7 @@
 
 O **Ybyrá Casting** é uma plataforma institucional focada na curadoria e desenvolvimento de talentos para o setor cultural e audiovisual. O projeto conecta artistas e produtores através de uma gestão eficiente de perfis, agendas e suporte à produção.
 
-[🌐 Acesse o Site Oficial](https://ybyra-wi3li.site)
+[🌐 Acesse o Site Oficial](https://wi3li.site/)
 
 ---
 
