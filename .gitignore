@@ -1,0 +1,14 @@
+
+# Certificados SSL
+*.crt
+*.pem
+aiven-ca.crt
+.env
+# Arquivos de configuração com dados sensíveis
+config.production.json
+
+# Diretórios de dados e backups
+*.bak
+backups
+.env
+.env

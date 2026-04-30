@@ -1,0 +1,130 @@
+/* Container do logo - Fixado na extremidade esquerda */
+.navbar-brand-container {
+  flex-shrink: 0; /* Impede que o container encolha */
+  position: absolute; /* Remove do fluxo normal do layout */
+  left: 0; /* Ancora na extremidade esquerda */
+  top: 50%; /* Prepara para alinhamento vertical */
+  transform: translateY(-50%); /* Centraliza verticalmente */
+  z-index: 10; /* Garante que fique acima de outros elementos */
+  padding-left: 1.5rem; /* Respiro adequado da borda da tela */
+}
+
+/* Link do logo - Container interno */
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 700;
+  color: #231f20;
+  font-size: 1rem;
+  text-decoration: none;
+  font-family: 'Playfair Display', 'Inter', sans-serif;
+  letter-spacing: 0.02em;
+  transition: opacity 0.2s ease;
+  white-space: nowrap; /* Evita quebra de linha do texto */
+}
+
+/* Logo image - Elemento visual */
+.brand-logo {
+  width: 130px; /* Largura fixa para consistência */
+  height: auto; /* Mantém proporção da imagem */
+  object-fit: contain; /* Garante que a imagem não distorça */
+  display: block; /* Remove espaços extras da imagem */
+  max-height: 45px; /* Limita altura para manter proporção com navbar */
+  transition: transform 0.2s ease; /* Animação sutil no hover */
+}
+
+/* Estados de hover */
+.navbar-brand:hover {
+  opacity: 0.8;
+}
+
+.brand-logo:hover {
+  transform: scale(1.02); /* Crescimento sutil no hover */
+}
+
+/* =============================================================================
+   RESPONSIVIDADE
+   ============================================================================= */
+
+/* Tablets e dispositivos médios */
+@media (max-width: 992px) {
+  .navbar-brand-container {
+    position: static; /* Retorna ao fluxo normal em mobile */
+    margin-bottom: 1rem;
+    padding-left: 0; /* Remove padding em mobile */
+    transform: none; /* Remove transform em mobile */
+  }
+  
+  .brand-logo {
+    width: 110px; /* Reduz tamanho em mobile */
+    max-height: 38px;
+  }
+}
+
+/* Smartphones */
+@media (max-width: 576px) {
+  .brand-logo {
+    width: 95px; /* Tamanho ainda menor em smartphones */
+    max-height: 32px;
+  }
+  
+  .navbar-brand-container {
+    padding-left: 1rem; /* Respiro reduzido em telas pequenas */
+  }
+}
+
+/* =============================================================================
+   DEBUGGING E UTILITÁRIOS (Remover em produção)
+   ============================================================================= */
+
+/* Descomente para visualizar boundaries durante desenvolvimento */
+/*
+.navbar-brand-container {
+  outline: 2px solid red !important;
+  background: rgba(255, 0, 0, 0.1) !important;
+}
+
+.brand-logo {
+  outline: 2px solid blue !important;
+  background: rgba(0, 0, 255, 0.1) !important;
+}
+*/
+
+/* =============================================================================
+   PERFOMANCE OPTIMIZATIONS
+   ============================================================================= */
+
+/* Hardware acceleration para animações suaves */
+.brand-logo {
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* =============================================================================
+   ACESSIBILIDADE
+   ============================================================================= */
+
+/* Foco acessível para navegação por teclado */
+.navbar-brand:focus {
+  outline: 2px solid #e08d5c;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .brand-logo {
+    filter: contrast(1.2);
+  }
+}
+
+/* Reduced motion para usuários que preferem menos animações */
+@media (prefers-reduced-motion: reduce) {
+  .brand-logo,
+  .navbar-brand {
+    transition: none !important;
+  }
+}

@@ -11,13 +11,13 @@
 
 <title>Ybyrá Casting</title>
 <!-- Título da aba do navegador -->
-
+<link rel="shortcut icon" href="/media/favicon.png" type="image/x-icon">
 <!-- Bootstrap CSS -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <!-- Importa o framework Bootstrap -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <!-- CSS do projeto -->
-<link rel="stylesheet" href="./css/style.css">
+<link rel="stylesheet" href="./css/style.css?v=20250427-1705">
 <!-- Arquivo de estilos personalizado -->
 
 </head>
@@ -34,7 +34,7 @@
         <!-- Logo - Âncora na extrema esquerda -->
         <div class="navbar-brand-container">
           <a href="index.html" class="navbar-brand" aria-label="Ybyrá Casting - Página inicial">
-            <img src="Ybyracasting.png" class="brand-logo" alt="Ybyrá Casting" width="130" height="auto">
+            <img src="/media/ybyracasting.png" class="brand-logo" alt="Ybyrá Casting" width="130" height="auto">
           </a>
         </div>
         
@@ -282,14 +282,14 @@
 
     <article class="blog-featured" data-category="noticias">
       <div class="featured-media">
-        <img src="./Ybyra.lab.jpeg" alt="Entrevista estratégica sobre cultura e audiovisual" loading="lazy">
+        <img src=".//media/ybyra-lab.jpeg" alt="Entrevista estratégica sobre cultura e audiovisual" loading="lazy">
         <div class="featured-overlay"></div>
         <div class="featured-copy">
           <span class="featured-tag">Notícias</span>
           <h3>Entrevista exclusiva com profissionais que definem a cultura do audiovisual</h3>
           <p>Conheça tendências, posicionamento estratégico e oportunidades para talentos no mercado nacional.</p>
           <div class="blog-cta-wrapper">
-            <a href="#" class="btn btn-hero blog-cta">Ler mais</a>
+            <a href="https://blog.wi3li.site/" class="btn btn-hero blog-cta" target="_blank">Ler mais</a>
           </div>
         </div>
       </div>
@@ -300,37 +300,48 @@
     </div>
   </div>
 </section>
-<section id="parceiros" class="parceiros section">
+<section id="parceiros" class="parceiros section" aria-label="Seção de parceiros">
   <div class="container">
     <div class="section-head text-center">
       <h2>Nossos Parceiros</h2>
     </div>
-    
-    <!-- Carousel Container -->
-    <div class="parceiros-carousel-container" style="background-color: #fff;">
-      <!-- Infinite Carousel Track -->
-      <div class="parceiros-carousel-track">
-        <!-- Original Set -->
-        <div class="parceiro-card">
-          <img src="./ÓIA Films.png" alt="ÓIA Films" loading="lazy">
+
+    <div class="parceiros-carousel-wrapper" role="region" aria-label="Carrossel de parceiros">
+      <div class="parceiros-carousel-track" aria-hidden="true">
+
+        <!-- Set 1 -->
+        <div class="parceiro-card" tabindex="0" role="img" aria-label="ÓIA Films - Parceiro">
+          <img src="./media/oia-films.png" alt="ÓIA Films" loading="lazy" width="160" height="72">
         </div>
-        <div class="parceiro-card">
-          <img src="./FASHION HUB.png" alt="Fashion Hub" loading="lazy">
+        <div class="parceiro-card" tabindex="0" role="img" aria-label="Fashion Hub - Parceiro">
+          <img src="./media/fashion-hub.png" alt="Fashion Hub" loading="lazy" width="160" height="72">
         </div>
-        <div class="parceiro-card">
-          <img src="./VITRINE DO MATO.png" alt="Vitrine do Mato" loading="lazy">
+        <div class="parceiro-card" tabindex="0" role="img" aria-label="Vitrine do Mato - Parceiro">
+          <img src="./media/vitrine-do-mato.png" alt="Vitrine do Mato" loading="lazy" width="160" height="72">
         </div>
-        
-        <!-- Duplicated Set for Infinite Scroll -->
-        <div class="parceiro-card">
-          <img src="./ÓIA Films.png" alt="ÓIA Films" loading="lazy">
+
+        <!-- Set 2 (duplicado para loop infinito) -->
+        <div class="parceiro-card" tabindex="0" role="img" aria-label="ÓIA Films - Parceiro">
+          <img src="./media/oia-films.png" alt="ÓIA Films" loading="lazy" width="160" height="72">
         </div>
-        <div class="parceiro-card">
-          <img src="./FASHION HUB.png" alt="Fashion Hub" loading="lazy">
+        <div class="parceiro-card" tabindex="0" role="img" aria-label="Fashion Hub - Parceiro">
+          <img src="./media/fashion-hub.png" alt="Fashion Hub" loading="lazy" width="160" height="72">
         </div>
-        <div class="parceiro-card">
-          <img src="./VITRINE DO MATO.png" alt="Vitrine do Mato" loading="lazy">
+        <div class="parceiro-card" tabindex="0" role="img" aria-label="Vitrine do Mato - Parceiro">
+          <img src="./media/vitrine-do-mato.png" alt="Vitrine do Mato" loading="lazy" width="160" height="72">
         </div>
+
+        <!-- Set 3 (terceira duplicação para loop ultra suave) -->
+        <div class="parceiro-card" tabindex="0" role="img" aria-label="ÓIA Films - Parceiro">
+          <img src="./media/oia-films.png" alt="ÓIA Films" loading="lazy" width="160" height="72">
+        </div>
+        <div class="parceiro-card" tabindex="0" role="img" aria-label="Fashion Hub - Parceiro">
+          <img src="./media/fashion-hub.png" alt="Fashion Hub" loading="lazy" width="160" height="72">
+        </div>
+        <div class="parceiro-card" tabindex="0" role="img" aria-label="Vitrine do Mato - Parceiro">
+          <img src="./media/vitrine-do-mato.png" alt="Vitrine do Mato" loading="lazy" width="160" height="72">
+        </div>
+
       </div>
     </div>
   </div>

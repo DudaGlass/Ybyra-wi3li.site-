@@ -1,0 +1,45 @@
+# Diretórios de dados e backups
+data/
+backups/
+mysql/
+
+# Arquivos de ambiente
+.env
+.env.local
+.env.aiven
+
+
+# Logs
+*.log
+logs/
+
+# Arquivos temporários
+.tmp/
+temp/
+*.tmp
+
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Docker
+docker-compose.override.yml
+Dockerfile.dev
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Node.js (se houver)
+node_modules/
+npm-debug.log*
+
+# Documentação
+README*.md
+CHANGELOG.md

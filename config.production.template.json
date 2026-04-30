@@ -1,0 +1,46 @@
+{
+  "url": "${GHOST_URL}",
+  "server": {
+    "host": "0.0.0.0",
+    "port": 2368
+  },
+  "database": {
+    "client": "mysql",
+    "connection": {
+      "host": "${AVNADMIN_HOST}",
+      "port": "${AVNADMIN_PORT}",
+      "user": "avnadmin",
+      "password": "${AVNADMIN_PASSWORD}",
+      "database": "${AVNADMIN_DATABASE}",
+      "ssl": {
+        "rejectUnauthorized": false,
+        "ca": "/etc/ssl/certs/aiven-ca.crt"
+      }
+    }
+  },
+  "mail": {
+    "transport": "SMTP",
+    "options": {
+      "host": "${SMTP_HOST}",
+      "port": "${SMTP_PORT}",
+      "secureConnection": false,
+      "auth": {
+        "user": "${SMTP_USER}",
+        "pass": "${SMTP_PASS}"
+      }
+    },
+    "from": "${MAIL_FROM_NAME} <${MAIL_FROM_EMAIL}>"
+  },
+  "admin": {
+    "url": "${GHOST_ADMIN_URL}",
+    "email": "${GHOST_ADMIN_EMAIL}",
+    "password": "${GHOST_ADMIN_PASSWORD}"
+  },
+  "logging": {
+    "transports": ["file", "stdout"]
+  },
+  "process": "systemd",
+  "paths": {
+    "contentPath": "/var/lib/ghost/content"
+  }
+}

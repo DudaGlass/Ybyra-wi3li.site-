@@ -32,12 +32,18 @@ nav#navbar { position: fixed; top: 0; width: 100%; z-index: 100; background: tra
   position: relative;
 }
 
-/* Container do logo - Âncora na extrema esquerda */
+/* Container do logo - Posicionado em relação à navbar inteira */
 .navbar-brand-container {
-  flex-shrink: 0;
-  position: absolute;
+  position: fixed;
   left: 0;
-  z-index: 10;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 101; /* Acima da navbar */
+  padding-left: 1.5rem; /* Respiro adequado da borda */
+  background: rgba(255, 255, 255, 0.95); /* Fundo para legibilidade */
+  backdrop-filter: blur(16px);
+  padding-right: 1rem;
+  border-radius: 0 8px 8px 0;
 }
 
 .navbar-brand {
@@ -51,6 +57,7 @@ nav#navbar { position: fixed; top: 0; width: 100%; z-index: 100; background: tra
   font-family: 'Playfair Display', 'Inter', sans-serif;
   letter-spacing: 0.02em;
   transition: opacity 0.2s ease;
+  white-space: nowrap; /* Evita quebra de linha */
 }
 
 .navbar-brand:hover {
@@ -58,18 +65,34 @@ nav#navbar { position: fixed; top: 0; width: 100%; z-index: 100; background: tra
 }
 
 .brand-logo {
-  width: 130px;
-  height: auto;
-  object-fit: contain;
-  display: block;
+  width: 160px; /* Aumentado para mais destaque */
+  height: auto; /* Mantém proporção da imagem */
+  object-fit: contain; /* Garante que a imagem não distorça */
+  display: block; /* Remove espaços extras da imagem */
+  max-height: 55px; /* Aumentado para manter proporção com navbar */
+  transition: transform 0.2s ease; /* Animação sutil no hover */
 }
 
-/* Container da navegação - Centralizado */
+.brand-logo:hover {
+  transform: scale(1.02);
+}
+
+/* Container da navegação - Verdadeiramente centralizado */
 .navbar-collapse {
   flex-grow: 1;
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+}
+
+/* Espaço reservado para o logo (invisível) */
+.navbar-collapse::before {
+  content: "";
+  position: absolute;
+  left: -230px;
+  width: 230px;
+  height: 1px;
 }
 
 .primary-menu {
@@ -242,7 +265,7 @@ nav#navbar { position: fixed; top: 0; width: 100%; z-index: 100; background: tra
   position: relative;
   min-height: 100vh;
   padding: 6rem 0 2.5rem;
-  background-image: url("../Ybyra.lab.jpeg");
+  background-image: url("..//media/ybyra-lab.jpeg");
   background-size: cover;
   background-position: right center;
   background-repeat: no-repeat;
@@ -869,50 +892,166 @@ section { padding: 3rem 0; background: transparent; }
 .section-head h2 { margin: 0; font-size: clamp(1.8rem, 3vw, 2.4rem); color: #8f6c58; font-family: 'Montserrat', sans-serif; font-weight: 300; letter-spacing: -0.03em; opacity: 0; transform: translateY(12px); animation: fadeInUp .85s ease forwards; }
 .section-head p { margin: .5rem auto 0; max-width: 620px; color: #5a514a; }
 /* Partners Section with White Background */
+/* =========================================================
+   PARCEIROS — Carrossel infinito
+   ========================================================= */
+
 .parceiros {
   background: #ffffff;
   padding: 4rem 0;
 }
 
-/* Carousel Container */
-.parceiros-carousel-container {
+/* Wrapper com fade nas laterais */
+.parceiros-carousel-wrapper {
   position: relative;
-  background: transparent;
-  border: none;
-  padding: 3rem 2rem;
-  margin: 2rem auto 0;
-  max-width: 1200px;
   overflow: hidden;
-  box-shadow: none;
 }
 
-/* Carousel Track - Infinite Scroll */
+/* Fades laterais via pseudo-elementos */
+.parceiros-carousel-wrapper::before,
+.parceiros-carousel-wrapper::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 120px;
+  z-index: 2;
+  pointer-events: none;
+}
+.parceiros-carousel-wrapper::before {
+  left: 0;
+  background: linear-gradient(to right, #ffffff 0%, transparent 100%);
+}
+.parceiros-carousel-wrapper::after {
+  right: 0;
+  background: linear-gradient(to left, #ffffff 0%, transparent 100%);
+}
+
+/* Track — largura automática, animação CSS pura */
 .parceiros-carousel-track {
   display: flex;
   align-items: center;
-  gap: 2rem;
-  animation: infiniteScroll 30s linear infinite;
-  width: fit-content;
-  will-change: transform;
+  gap: 3rem;
+  width: max-content;
 }
 
-/* Individual Partner Cards in Carousel */
-.parceiros-carousel-track .parceiro-card {
+/* Pausa no hover para acessibilidade e usabilidade */
+.parceiros-carousel-wrapper:hover .parceiros-carousel-track,
+.parceiros-carousel-wrapper:focus-within .parceiros-carousel-track {
+  animation-play-state: paused;
+}
+
+/* Cards individuais */
+.parceiro-card {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 110px;
-  min-width: 180px;
-  padding: 1.15rem 1rem;
-  background: transparent;
-  border: none;
-  box-shadow: none;
-  transition: none;
+  min-width: 160px;
+  height: 90px;
   flex-shrink: 0;
+  /* Grayscale padrão, colorido no hover */
+  filter: grayscale(1) opacity(0.6);
+  transition: filter 0.4s ease, transform 0.3s ease;
+  cursor: pointer;
 }
 
-.parceiros-carousel-track .parceiro-card:hover {
-  transform: none;
+.parceiro-card:hover {
+  filter: grayscale(0) opacity(1);
+  transform: scale(1.05);
+}
+
+.parceiro-card:focus {
+  outline: 2px solid #e08d5c;
+  outline-offset: 4px;
+  border-radius: 8px;
+}
+
+.parceiro-card img {
+  max-width: 160px;
+  max-height: 72px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.parceiro-card:hover img {
+  transform: scale(1.1);
+}
+
+/* Animação — translateX de 0 a -50%
+   Funciona porque temos 2 sets (50% = 1 set = volta ao início suave) */
+/* Animação — translateX de 0 a -66.6%
+   Funciona porque temos 3 sets (66.6% = 2 sets = volta ao início suave) */
+@keyframes infiniteScroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-66.6%); }
+}
+
+/* Garante looping perfeito sem saltos */
+.parceiros-carousel-track {
+  animation: infiniteScroll 30s linear infinite;
+  will-change: transform;
+}
+
+/* Respeita preferência por movimento reduzido */
+@media (prefers-reduced-motion: reduce) {
+  .parceiros-carousel-track {
+    animation: none;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+  }
+}
+
+/* Mobile: fades menores e melhorias de responsividade */
+@media (max-width: 768px) {
+  .parceiros-carousel-wrapper::before,
+  .parceiros-carousel-wrapper::after {
+    width: 40px;
+  }
+
+  .parceiro-card {
+    min-width: 140px;
+    height: 80px;
+  }
+
+  .parceiro-card img {
+    max-width: 140px;
+    max-height: 64px;
+  }
+
+  .parceiros-carousel-track {
+    gap: 2rem;
+    animation-duration: 25s;
+  }
+}
+
+@media (max-width: 576px) {
+  .parceiros-carousel-wrapper::before,
+  .parceiros-carousel-wrapper::after {
+    width: 30px;
+  }
+
+  .parceiro-card {
+    min-width: 120px;
+    height: 70px;
+  }
+
+  .parceiro-card img {
+    max-width: 120px;
+    max-height: 56px;
+  }
+
+  .parceiros-carousel-track {
+    gap: 1.5rem;
+    animation-duration: 20s;
+  }
+
+  .parceiros {
+    padding: 3rem 0;
+  }
 }
 
 /* Arrow Navigation */
@@ -953,22 +1092,6 @@ section { padding: 3rem 0; background: transparent; }
 .carousel-arrow-next {
   right: 1rem;
 }
-
-/* Infinite Scroll Animation */
-@keyframes infiniteScroll {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
-}
-
-.parceiro-card img {
-  max-width: 100%;
-  max-height: 72px;
-  object-fit: contain;
-}
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; align-items: center; }
 .grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; }
 .card { border: 1px solid #f0e7dc; border-radius: 16px; padding: 1.2rem; background: #fff; transition: .2s ease; }
@@ -982,56 +1105,251 @@ section { padding: 3rem 0; background: transparent; }
 .sobre-imagem img { border-radius: 16px; object-fit: cover; }
 .sobre-texto { background: rgba(255,255,255,0.78); border: 1px solid rgba(255,255,255,0.55); border-radius: 16px; padding: 1.2rem; backdrop-filter: blur(10px); }
 .sobre-texto h2 { margin-top: 0; }
+/* =========================================================
+   NAVBAR MOBILE — Drawer deslizante
+   ========================================================= */
+
 @media (max-width: 992px) {
-  /* Layout responsivo para navbar */
-  .navbar-layout {
-    height: auto;
-    min-height: 70px;
-    padding: 1rem 0;
+
+  /* Navbar fixa com blur */
+  nav#navbar {
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
   }
-  
+
+  .navbar-layout {
+    height: 62px;
+    padding: 0;
+    flex-wrap: nowrap;
+  }
+
+  /* Logo volta ao fluxo normal */
   .navbar-brand-container {
     position: static;
-    margin-bottom: 1rem;
+    transform: none;
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    padding: 0 0 0 1.25rem;
+    border-radius: 0;
+    flex-shrink: 0;
   }
-  
+
+  .brand-logo {
+    width: 110px;
+    max-height: 38px;
+  }
+
+  /* Toggler hambúrguer animado */
   .navbar-toggler {
     position: static;
     margin-left: auto;
+    margin-right: 0.5rem;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    border-radius: 10px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    padding: 0;
+    flex-shrink: 0;
   }
-  
+
+  .navbar-toggler:hover {
+    background: rgba(143, 108, 88, 0.08);
+  }
+
+  .navbar-toggler:focus {
+    outline: 2px solid #e08d5c;
+    outline-offset: 2px;
+  }
+
+  /* Linhas do hambúrguer */
+  .navbar-toggler .bar {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: #413a35;
+    border-radius: 2px;
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.2s ease,
+                width 0.3s ease;
+    transform-origin: center;
+  }
+
+  /* Estado aberto: X */
+  .navbar-toggler[aria-expanded="true"] .bar:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+  .navbar-toggler[aria-expanded="true"] .bar:nth-child(2) {
+    opacity: 0;
+    width: 0;
+  }
+  .navbar-toggler[aria-expanded="true"] .bar:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  /* Menu collapse — escondido por padrão */
   .navbar-collapse {
-    position: static;
-    flex-basis: 100%;
-    flex-grow: 1;
-    align-items: flex-start;
+    position: fixed;
+    top: 62px;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.97);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(219, 179, 156, 0.2);
+    padding: 0.5rem 1.25rem 1.5rem;
+    z-index: 99;
+    transform: translateY(-8px);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.28s ease;
+    display: block;
+    flex-basis: auto;
   }
-  
+
+  /* Estado aberto */
+  .navbar-collapse.show {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  /* Overlay escuro atrás do menu */
+  .navbar-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    top: 62px;
+    background: rgba(35, 31, 32, 0.2);
+    z-index: 98;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .navbar-overlay.show {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  /* Links de navegação */
   .primary-menu {
     flex-direction: column;
     width: 100%;
-    gap: 0.5rem;
-    margin-top: 1rem;
+    gap: 2px;
+    margin-bottom: 1.25rem;
+    margin-top: 0;
   }
-  
+
   .nav-item {
     width: 100%;
-    text-align: center;
   }
-  
+
   .nav-link {
-    display: block;
-    padding: 0.75rem 1rem;
-    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.85rem 0.75rem;
+    border-radius: 10px;
+    font-size: 0.92rem;
+    transition: background 0.18s ease, color 0.18s ease, padding-left 0.18s ease;
   }
-  
-  /* Outros ajustes responsivos */
-  .container { width: 95%; }
-  .grid-2 { grid-template-columns: 1fr; }
-  .grid-3 { grid-template-columns: 1fr; }
-  .service-grid { grid-template-columns: 1fr; }
-  .projects-grid { grid-template-columns: 1fr; }
-  .sobre-wrap { grid-template-columns: 1fr; }
-  .sobre-highlights { grid-template-columns: 1fr; }
-  .sobre-hero-card { min-height: auto; }
+
+  .nav-link::after {
+    content: "";
+    display: block;
+    width: 6px;
+    height: 6px;
+    border-right: 1.5px solid currentColor;
+    border-top: 1.5px solid currentColor;
+    transform: rotate(45deg);
+    opacity: 0.3;
+    flex-shrink: 0;
+    transition: opacity 0.18s, transform 0.18s;
+  }
+
+  .nav-link:hover {
+    background: #f7ede0;
+    color: #8f6c58;
+    padding-left: 1.1rem;
+  }
+
+  .nav-link:hover::after {
+    opacity: 0.7;
+    transform: rotate(45deg) translate(2px, -2px);
+  }
+
+  /* Divisor */
+  .mobile-menu-divider {
+    height: 1px;
+    background: rgba(219, 179, 156, 0.25);
+    margin: 0.5rem 0 1rem;
+  }
+
+  /* CTAs no drawer */
+  .mobile-menu-ctas {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .btn-mobile-primary {
+    display: block;
+    text-align: center;
+    padding: 0.85rem 1rem;
+    border-radius: 999px;
+    background: #8f6c58;
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+
+  .btn-mobile-primary:hover {
+    background: #e08d5c;
+    transform: translateY(-1px);
+  }
+
+  .btn-mobile-secondary {
+    display: block;
+    text-align: center;
+    padding: 0.85rem 1rem;
+    border-radius: 999px;
+    border: 1px solid rgba(143, 108, 88, 0.35);
+    color: #8f6c58;
+    background: transparent;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  .btn-mobile-secondary:hover {
+    background: rgba(143, 108, 88, 0.08);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navbar-collapse,
+  .navbar-overlay {
+    transition: none;
+  }
 }
