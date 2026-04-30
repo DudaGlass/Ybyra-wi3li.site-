@@ -19,37 +19,23 @@ services:
     image: ghost:5-alpine
     container_name: ybyra-casting-ghost
     restart: unless-stopped
+    dns:
+      - 1.1.1.1
+      - 8.8.8.8
     ports:
       - "15594:2368"
     environment:
       url: ${GHOST_URL}
+      NODE_TLS_REJECT_UNAUTHORIZED: "0"
       privacy__useUpdateCheck: false
       privacy__useGravatar: false
       privacy__useRpcPing: false
-      use__Tls: true
     volumes:
       - ./data/ghost_content:/var/lib/ghost/content
       - ./aiven-ca.crt:/etc/ssl/certs/aiven-ca.crt:ro
       - ./config.production.json:/var/lib/ghost/config.production.json:ro
     networks:
       - cloudflared
-
-  # mysql: (Serviço local desativado - usando Aiven Cloud)
-# mysql:
-#   image: mariadb:10.11
-#   container_name: ybyra-casting-mysql
-#   restart: unless-stopped
-#   environment:
-#     MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-#     MYSQL_DATABASE: ${GHOST_DB_NAME}
-#     MYSQL_USER: ${GHOST_DB_USER}
-#     MYSQL_PASSWORD: ${GHOST_DB_PASSWORD}
-#   volumes:
-#     - ./data/mysql:/var/lib/mysql
-#     - ./mysql/init:/docker-entrypoint-initdb.d:ro
-#   networks:
-#     - cloudflared
-#   command: --default-authentication-plugin=mysql_native_password
 
 networks:
   cloudflared:
