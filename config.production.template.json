@@ -24,17 +24,13 @@
       "host": "${SMTP_HOST}",
       "port": "${SMTP_PORT}",
       "secureConnection": false,
+      "requireTLS": true,
       "auth": {
         "user": "${SMTP_USER}",
         "pass": "${SMTP_PASS}"
       }
     },
     "from": "${MAIL_FROM_NAME} <${MAIL_FROM_EMAIL}>"
-  },
-  "admin": {
-    "url": "${GHOST_ADMIN_URL}",
-    "email": "${GHOST_ADMIN_EMAIL}",
-    "password": "${GHOST_ADMIN_PASSWORD}"
   },
   "logging": {
     "transports": ["file", "stdout"]

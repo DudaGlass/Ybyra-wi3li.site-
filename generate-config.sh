@@ -2,9 +2,12 @@
 
 # Script para gerar config.production.json a partir do template e variáveis de ambiente
 
-# Carregar variáveis de ambiente
+# Carregar variáveis de ambiente (suporta valores com espaços)
 if [ -f .env ]; then
-    export $(cat .env | grep -v '^#' | xargs)
+    set -a
+    # shellcheck disable=SC1091
+    source .env
+    set +a
 else
     echo "❌ Arquivo .env não encontrado!"
     exit 1
