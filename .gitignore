@@ -10,5 +10,4 @@ config.production.json
 # Diretórios de dados e backups
 *.bak
 backups
-.env
-.env
+
