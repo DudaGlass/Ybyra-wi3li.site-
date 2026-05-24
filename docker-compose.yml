@@ -1,19 +1,10 @@
 services:
   web:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: .
     container_name: ybyra-casting-web
     restart: unless-stopped
-    ports:
-      - "15593:80"
     networks:
       - cloudflared
-    depends_on:
-      - ghost
-    volumes:
-      - ./:/usr/share/nginx/html:ro
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
 
   ghost:
     image: ghost:5-alpine
@@ -22,8 +13,6 @@ services:
     dns:
       - 1.1.1.1
       - 8.8.8.8
-    ports:
-      - "15594:2368"
     environment:
       url: ${GHOST_URL}
       NODE_TLS_REJECT_UNAUTHORIZED: "0"
