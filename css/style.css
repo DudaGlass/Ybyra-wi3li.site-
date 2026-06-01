@@ -560,56 +560,55 @@ nav#navbar { position: fixed; top: 0; width: 100%; z-index: 100; background: tra
 .casting-call p { color: #4f4a48; margin-bottom: 1rem; max-width: 700px; margin-inline: auto; }
 
 .sobre {
-  position: relative;
-  min-height: 100vh;
-  padding: 6rem 0 2.5rem;
-  background-image: url("..//media/ybyra-lab.jpeg");
-  background-size: cover;
-  background-position: right center;
-  background-repeat: no-repeat;
-  color: #e7d7bf;
-  overflow: hidden;
-  transition: background-position .45s ease, transform .45s ease;
-  animation: sobreBgZoom 30s ease infinite alternate;
-  font-family: 'Inter', Arial, sans-serif;
+  position: relative; /* posiciona o elemento como referência para filhos absolutamente posicionados */
+  min-height: 100vh; /* garante pelo menos a altura total da janela (viewport) */
+  padding: 6rem 0 2.5rem; /* espaçamento interno: 6rem em cima, 0 nas laterais, 2.5rem em baixo */
+  background-image: url("..//media/sobre.png"); /* imagem de fundo da seção sobre */
+  background-size: cover; /* faz a imagem cobrir totalmente o elemento, cortando se necessário */
+  background-position: right center; /* posiciona a imagem à direita e verticalmente centralizada */
+  background-repeat: no-repeat; /* evita que a imagem se repita */
+  color: #e7d7bf; /* cor padrão do texto dentro da seção */
+  overflow: hidden; /* oculta qualquer conteúdo que ultrapasse os limites do contêiner */
+  transition: background-position .45s ease, transform .45s ease; /* anima mudanças nessas propriedades */
+  animation: sobreBgZoom 30s ease infinite alternate; /* animação contínua de leve zoom/variação de fundo */
+  font-family: 'Inter', Arial, sans-serif; /* define a família tipográfica usada na seção */
 }
 .sobre::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(90deg, rgba(9, 8, 7, 0.96) 0%, rgba(15, 13, 12, 0.76) 34%, rgba(20, 17, 15, 0.42) 58%, rgba(20, 17, 15, 0.18) 76%, transparent 100%),
-    linear-gradient(180deg, rgba(226, 206, 178, 0.94) 0%, rgba(226, 206, 178, 0.56) 24%, rgba(226, 206, 178, 0.24) 44%, transparent 72%);
-  z-index: 0;
-  pointer-events: none;
+  content: ""; /* pseudo-elemento usado para camadas visuais adicionais */
+  position: absolute; /* posicionamento absoluto cobrindo todo o elemento pai */
+  inset: 0; /* atalho para top:0; right:0; bottom:0; left:0; */
+  /* remover sombreado lateral: manter apenas um gradiente vertical suave sobre a imagem */
+  background: linear-gradient(180deg, rgba(226, 206, 178, 0.36) 0%, rgba(226, 206, 178, 0.18) 30%, rgba(226, 206, 178, 0.12) 60%, transparent 100%);
+  z-index: 0; /* fica atrás do conteúdo principal */
+  pointer-events: none; /* não captura cliques do usuário */
 }
 .sobre::after {
-  content: "";
-  position: absolute;
-  inset: auto 0 0;
-  height: 12rem;
-  background: linear-gradient(180deg, transparent 0%, rgba(226, 206, 178, 0.12) 22%, rgba(226, 206, 178, 0.24) 40%, rgba(226, 206, 178, 0.38) 60%, rgba(226, 206, 178, 0.56) 75%, rgba(226, 206, 178, 0.78) 90%, rgba(226, 206, 178, 0.94) 100%);
-  z-index: 0;
+  content: ""; /* pseudo-elemento para gradiente na base da seção */
+  position: absolute; /* posicionado de forma absoluta */
+  inset: auto 0 0; /* top: auto; left:0; right:0; bottom:0; */
+  height: 12rem; /* altura do gradiente inferior */
+  background: linear-gradient(180deg, transparent 0%, rgba(226, 206, 178, 0.12) 22%, rgba(226, 206, 178, 0.24) 40%, rgba(226, 206, 178, 0.38) 60%, rgba(226, 206, 178, 0.56) 75%, rgba(226, 206, 178, 0.78) 90%, rgba(226, 206, 178, 0.94) 100%); /* gradiente suave do transparente para uma camada quente */
+  z-index: 0; /* atrás do conteúdo */
 }
 .sobre .container,
 .sobre .sobre-wrap {
-  position: relative;
-  z-index: 1;
+  position: relative; /* eleva o contexto de empilhamento para o conteúdo */
+  z-index: 1; /* garante que o conteúdo fique acima dos pseudo-elementos */
 }
 .sobre-wrap {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.4rem;
-  align-items: flex-start;
+  display: grid; /* layout em grid para organizar a seção */
+  grid-template-columns: 1fr; /* uma coluna de conteúdo */
+  gap: 1.4rem; /* espaçamento entre blocos do grid */
+  align-items: flex-start; /* alinha o conteúdo ao topo */
 }
 .sobre-main {
-  display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
-  max-width: 720px;
-  opacity: 0;
-  transform: translateY(18px);
-  animation: fadeInUp .9s ease .05s forwards;
+  display: flex; /* usa flexbox para empilhar o conteúdo */
+  flex-direction: column; /* empilha os elementos verticalmente */
+  gap: 1.2rem; /* espaçamento entre os elementos internos */
+  max-width: 540px; /* reduz a largura para deslocar o texto e os botões um pouco mais à esquerda */
+  opacity: 0; /* inicia invisível para animação */
+  transform: translateY(18px); /* deslocamento inicial para animação */
+  animation: fadeInUp .9s ease .05s forwards; /* animação de entrada */
 }
 .sobre-label {
   display: inline-flex;
@@ -624,7 +623,7 @@ nav#navbar { position: fixed; top: 0; width: 100%; z-index: 100; background: tra
   margin: 0;
   font-family: 'Montserrat', 'Inter', sans-serif;
   font-size: clamp(2.8rem, 4vw, 4rem);
-  color: #f4e7d3;
+  color: #e5ddd0;
   line-height: 1.02;
   font-weight: 600;
   letter-spacing: -0.03em;
@@ -642,14 +641,14 @@ nav#navbar { position: fixed; top: 0; width: 100%; z-index: 100; background: tra
   max-width: 680px;
   color: rgba(241, 227, 209, 0.94);
   font-family: 'Inter', Arial, sans-serif;
-  font-size: clamp(1rem, 1.15vw, 1.04rem);
+  font-size: clamp(0.95rem, 1.01vw, 0.98rem);
   line-height: 1.72;
   letter-spacing: .01em;
   text-shadow: 0 2px 14px rgba(0,0,0,0.08);
 }
 .sobre-lead {
   font-weight: 500;
-  font-size: clamp(1.05rem, 1.2vw, 1.14rem);
+  font-size: clamp(1rem, 1.05vw, 1.06rem);
   margin-bottom: .8rem;
 }
 .sobre-copy {
@@ -660,14 +659,17 @@ nav#navbar { position: fixed; top: 0; width: 100%; z-index: 100; background: tra
 .sobre-tags {
   display: flex;
   flex-wrap: wrap;
+  justify-content: flex-start;
   gap: .85rem;
   margin-top: 1.5rem;
+  max-width: 520px; /* força quebra mais cedo quando o espaço é limitado */
 }
 .sobre-pill {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: .8rem 1.4rem;
+  min-width: 170px;
   border-radius: 999px;
   background: linear-gradient(135deg, #8f6c58 0%, #a67c62 100%);
   color: #fff;
