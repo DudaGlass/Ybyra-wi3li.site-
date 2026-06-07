@@ -559,102 +559,274 @@ nav#navbar { position: fixed; top: 0; width: 100%; z-index: 100; background: tra
 .casting-call h2 { margin-bottom: .5rem; font-size: 1.9rem; }
 .casting-call p { color: #4f4a48; margin-bottom: 1rem; max-width: 700px; margin-inline: auto; }
 
+/* ================= SEÇÃO SOBRE (FULL SCREEN IMAGE COM OVERLAY) ================= */
+
 .sobre {
-  position: relative; /* posiciona o elemento como referência para filhos absolutamente posicionados */
-  min-height: 100vh; /* garante pelo menos a altura total da janela (viewport) */
-  padding: 6rem 0 2.5rem; /* espaçamento interno: 6rem em cima, 0 nas laterais, 2.5rem em baixo */
-  background-image: url("..//media/sobre.png"); /* imagem de fundo da seção sobre */
-  background-size: cover; /* faz a imagem cobrir totalmente o elemento, cortando se necessário */
-  background-position: right center; /* posiciona a imagem à direita e verticalmente centralizada */
-  background-repeat: no-repeat; /* evita que a imagem se repita */
-  color: #e7d7bf; /* cor padrão do texto dentro da seção */
-  overflow: hidden; /* oculta qualquer conteúdo que ultrapasse os limites do contêiner */
-  transition: background-position .45s ease, transform .45s ease; /* anima mudanças nessas propriedades */
-  animation: sobreBgZoom 30s ease infinite alternate; /* animação contínua de leve zoom/variação de fundo */
-  font-family: 'Inter', Arial, sans-serif; /* define a família tipográfica usada na seção */
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  overflow: hidden;
+  background: #000000;
 }
-.sobre::before {
-  content: ""; /* pseudo-elemento usado para camadas visuais adicionais */
-  position: absolute; /* posicionamento absoluto cobrindo todo o elemento pai */
-  inset: 0; /* atalho para top:0; right:0; bottom:0; left:0; */
-  /* remover sombreado lateral: manter apenas um gradiente vertical suave sobre a imagem */
-  background: linear-gradient(180deg, rgba(226, 206, 178, 0.36) 0%, rgba(226, 206, 178, 0.18) 30%, rgba(226, 206, 178, 0.12) 60%, transparent 100%);
-  z-index: 0; /* fica atrás do conteúdo principal */
-  pointer-events: none; /* não captura cliques do usuário */
-}
+
+/* Imagem de fundo com efeito no hover */
 .sobre::after {
-  content: ""; /* pseudo-elemento para gradiente na base da seção */
-  position: absolute; /* posicionado de forma absoluta */
-  inset: auto 0 0; /* top: auto; left:0; right:0; bottom:0; */
-  height: 12rem; /* altura do gradiente inferior */
-  background: linear-gradient(180deg, transparent 0%, rgba(226, 206, 178, 0.12) 22%, rgba(226, 206, 178, 0.24) 40%, rgba(226, 206, 178, 0.38) 60%, rgba(226, 206, 178, 0.56) 75%, rgba(226, 206, 178, 0.78) 90%, rgba(226, 206, 178, 0.94) 100%); /* gradiente suave do transparente para uma camada quente */
-  z-index: 0; /* atrás do conteúdo */
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("../media/sobre.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: scale(1);
+  transition: transform 0.9s ease, filter 0.9s ease;
+  z-index: 0;
 }
-.sobre .container,
-.sobre .sobre-wrap {
-  position: relative; /* eleva o contexto de empilhamento para o conteúdo */
-  z-index: 1; /* garante que o conteúdo fique acima dos pseudo-elementos */
+
+.sobre:hover::after {
+  transform: scale(1.06);
+  filter: brightness(1.03);
 }
-.sobre-wrap {
-  display: grid; /* layout em grid para organizar a seção */
-  grid-template-columns: 1fr; /* uma coluna de conteúdo */
-  gap: 1.4rem; /* espaçamento entre blocos do grid */
-  align-items: flex-start; /* alinha o conteúdo ao topo */
+
+/* Overlay escuro na imagem */
+.sobre::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.4) 25%, rgba(0, 0, 0, 0.2) 50%, transparent 100%);
+  z-index: 1;
+  pointer-events: none;
 }
-.sobre-main {
-  display: flex; /* usa flexbox para empilhar o conteúdo */
-  flex-direction: column; /* empilha os elementos verticalmente */
-  gap: 1.2rem; /* espaçamento entre os elementos internos */
-  max-width: 540px; /* reduz a largura para deslocar o texto e os botões um pouco mais à esquerda */
-  opacity: 0; /* inicia invisível para animação */
-  transform: translateY(18px); /* deslocamento inicial para animação */
-  animation: fadeInUp .9s ease .05s forwards; /* animação de entrada */
+
+.sobre-content {
+  position: relative;
+  z-index: 1;
+  max-width: 520px;
+  width: 100%;
+  padding: 4rem;
+  opacity: 0;
+  animation: fadeInUp 1s ease 0.2s forwards;
 }
+
 .sobre-label {
-  display: inline-flex;
-  text-transform: uppercase;
-  letter-spacing: .24em;
-  font-size: .78rem;
+  display: block;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.7rem;
   font-weight: 700;
-  color: rgba(239, 230, 216, 0.92);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.65);
+  margin-bottom: 2.2rem;
+  word-spacing: 0.1em;
 }
-.sobre-title-group { display: grid; gap: .85rem; }
-.sobre-title-group h2 {
-  margin: 0;
-  font-family: 'Montserrat', 'Inter', sans-serif;
-  font-size: clamp(2.8rem, 4vw, 4rem);
-  color: #e5ddd0;
-  line-height: 1.02;
-  font-weight: 600;
+
+.sobre-title-group {
+  margin-bottom: 2.5rem;
+}
+
+.sobre-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(2.8rem, 4.2vw, 4.2rem);
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.05;
   letter-spacing: -0.03em;
-  text-shadow: 0 10px 24px rgba(0,0,0,0.28);
+  margin: 0 0 1.5rem 0;
+  text-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
 }
-.sobre-title-line {
-  width: 72px;
-  height: 2px;
-  border-radius: 999px;
-  background: rgba(244, 231, 211, 0.53);
-}
-.sobre-lead,
-.sobre-copy {
+
+.sobre-line {
+  width: 90px;
+  height: 2.5px;
+  background: linear-gradient(90deg, #D4A574 0%, #C8A27A 50%, #B8936A 100%);
+  border-radius: 2px;
   margin: 0;
-  max-width: 680px;
-  color: rgba(241, 227, 209, 0.94);
-  font-family: 'Inter', Arial, sans-serif;
-  font-size: clamp(0.95rem, 1.01vw, 0.98rem);
-  line-height: 1.72;
-  letter-spacing: .01em;
-  text-shadow: 0 2px 14px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 8px rgba(200, 162, 122, 0.3);
 }
-.sobre-lead {
+
+.sobre-subtitle {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.08rem;
   font-weight: 500;
-  font-size: clamp(1rem, 1.05vw, 1.06rem);
-  margin-bottom: .8rem;
+  color: rgba(255, 255, 255, 0.97);
+  margin: 0 0 2rem 0;
+  line-height: 1.65;
+  letter-spacing: 0.005em;
 }
-.sobre-copy {
-  padding: 0;
-  margin-bottom: .9rem;
-  font-weight: 300;
+
+.sobre-text {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.96rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.87);
+  margin: 0 0 1.5rem 0;
+  line-height: 1.78;
+  letter-spacing: 0.005em;
+  max-width: 520px;
+}
+
+.sobre-text:last-of-type {
+  margin-bottom: 2.5rem;
+}
+
+/* BOTÕES - TODOS NA MESMA LINHA HORIZONTAL */
+.sobre-buttons {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 1.4rem;
+  margin-top: 3rem;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.sobre-btn {
+  padding: 0.85rem 2rem;
+  height: 52px;
+  border-radius: 999px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  transition: all 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  background: linear-gradient(135deg, #B88E6A 0%, #C4956F 100%);
+  color: #ffffff;
+  box-shadow: 0 12px 36px rgba(184, 142, 106, 0.25);
+  position: relative;
+  overflow: hidden;
+  flex: 0 0 auto;
+}
+
+.sobre-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+  transform: translateX(-110%);
+  transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.sobre-btn:hover {
+  background: linear-gradient(135deg, #D4A574 0%, #E0B284 100%);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 50px rgba(184, 142, 106, 0.35);
+}
+
+.sobre-btn:hover::before {
+  transform: translateX(110%);
+}
+
+.sobre-btn:active {
+  transform: translateY(-2px);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* RESPONSIVIDADE */
+@media (max-width: 1024px) {
+  .sobre-content {
+    padding: 3rem;
+  }
+  
+  .sobre-title {
+    font-size: clamp(2.4rem, 3.5vw, 3.5rem);
+  }
+  
+  .sobre-buttons {
+    gap: 1rem;
+  }
+  
+  .sobre-btn {
+    padding: 0.75rem 1.6rem;
+    font-size: 0.65rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .sobre {
+    justify-content: center;
+  }
+  
+  .sobre-content {
+    padding: 2rem;
+    max-width: 100%;
+    width: 90%;
+  }
+  
+  .sobre-title {
+    font-size: clamp(2rem, 3vw, 2.8rem);
+  }
+  
+  .sobre-subtitle {
+    font-size: 1rem;
+  }
+  
+  .sobre-text {
+    font-size: 0.9rem;
+  }
+  
+  .sobre-buttons {
+    gap: 0.8rem;
+    flex-wrap: wrap;
+  }
+  
+  .sobre-btn {
+    padding: 0.7rem 1.4rem;
+    height: 48px;
+    font-size: 0.6rem;
+    flex: 1 1 calc(33.333% - 0.6rem);
+    min-width: 120px;
+  }
+}
+
+@media (max-width: 480px) {
+  .sobre-content {
+    padding: 1.5rem;
+    width: 95%;
+  }
+  
+  .sobre-title {
+    font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+  }
+  
+  .sobre-subtitle {
+    font-size: 0.95rem;
+  }
+  
+  .sobre-text {
+    font-size: 0.85rem;
+  }
+  
+  .sobre-buttons {
+    gap: 0.6rem;
+  }
+  
+  .sobre-btn {
+    padding: 0.65rem 1.2rem;
+    height: 46px;
+    font-size: 0.55rem;
+    letter-spacing: 0.08em;
+    flex: 1 1 calc(33.333% - 0.4rem);
+    min-width: 100px;
+  }
 }
 .sobre-tags {
   display: flex;
