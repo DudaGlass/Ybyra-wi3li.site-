@@ -312,26 +312,22 @@
       <h2>Blog / Notícias / Artigos</h2>
     </div>
 
-
-
-    <article class="blog-featured" data-category="noticias">
-      <div class="featured-media">
-        <img src=".//media/ybyra-lab.jpeg" alt="Entrevista estratégica sobre cultura e audiovisual" loading="lazy">
+    <!-- Container dinâmico: conteúdo preenchido por blog-featured.js -->
+    <div id="blog-featured-root" class="blog-featured" aria-label="Artigo em destaque" aria-live="polite">
+      <!-- Skeleton loading: será substituído pelo JS assim que o conteúdo carregar -->
+      <div class="blog-skeleton" role="status" aria-hidden="true">
+        <div class="skeleton-media"></div>
         <div class="featured-overlay"></div>
-        <div class="featured-copy">
-          <span class="featured-tag">Notícias</span>
-          <h3>Entrevista exclusiva com profissionais que definem a cultura do audiovisual</h3>
-          <p>Conheça tendências, posicionamento estratégico e oportunidades para talentos no mercado nacional.</p>
-          <div class="blog-cta-wrapper">
-            <a href="https://blog.ybyracasting.com/" class="btn btn-hero blog-cta" target="_blank">Ler mais</a>
-          </div>
+        <div class="skeleton-copy">
+          <span class="skeleton-tag"></span>
+          <h3 class="skeleton-title"></h3>
+          <p class="skeleton-excerpt"></p>
+          <div class="skeleton-cta"></div>
         </div>
       </div>
-    </article>
-    
-    <div class="blog-grid">
-      <!-- Blog cards removidos  -->
     </div>
+
+    <div class="blog-grid" id="blog-grid" aria-hidden="true"></div>
   </div>
 </section>
 <section id="parceiros" class="parceiros section" aria-label="Seção de parceiros">
@@ -502,6 +498,9 @@ fetch("https://api.ybyra.com/metricas/produtor")
 
 <!-- JS do projeto -->
 <script src="script.js"></script>
+
+<!-- Blog featured dynamic loader -->
+<script type="module" src="./blog-featured.js"></script>
 
 <!-- Smooth Scroll with Offset -->
 <script>

@@ -1,0 +1,19 @@
+[
+  {
+    "id": 123,
+    "title": { "rendered": "Lançamento do novo projeto Ybyrá: Curadoria e Oportunidades" },
+    "link": "https://blog.ybyracasting.com/2026/05/lancamento-novo-projeto-ybyra/",
+    "date": "2026-05-20T10:00:00",
+    "excerpt": { "rendered": "<p>Conheça o novo projeto do Ybyrá Casting: curadoria especializada, oportunidades e novidades do setor audiovisual.</p>" },
+    "_embedded": {
+      "wp:featuredmedia": [
+        {
+          "source_url": "https://blog.ybyracasting.com/wp-content/uploads/2026/05/ybyra-cover.jpg",
+          "alt_text": "Capa do artigo Ybyrá"
+        }
+      ],
+      "author": [ { "name": "Equipe Ybyrá" } ],
+      "wp:term": [ [ { "name": "Notícias" } ] ]
+    }
+  }
+]
