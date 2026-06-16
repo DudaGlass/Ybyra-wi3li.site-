@@ -3,6 +3,21 @@ services:
     build: .
     container_name: ybyra-casting-web
     restart: unless-stopped
+    depends_on:
+      - api
+    networks:
+      - cloudflared
+
+  api:
+    build: ./api
+    container_name: ybyra-casting-api
+    restart: unless-stopped
+    environment:
+      GHOST_URL: ${GHOST_URL}
+      GHOST_CONTENT_API_KEY: ${GHOST_CONTENT_API_KEY}
+      PORT: "3001"
+      NODE_ENV: production
+      CACHE_TTL: "300"
     networks:
       - cloudflared
 
