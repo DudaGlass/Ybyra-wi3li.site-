@@ -1,50 +1,49 @@
 'use strict';
 
 const express = require('express');
-const { fetchLatestPost } = require('../services/ghostService');
+const { fetchLatestPost } = require('../services/ghostClient');
 
 const router = express.Router();
 
 /**
  * GET /api/latest-post
  *
- * Returns the latest published post from Ghost CMS.
- * Response format:
+ * Retorna o post mais recente do Ghost CMS.
+ *
+ * Resposta de sucesso (200):
  * {
  *   "success": true,
- *   "post": { ...postFields }
+ *   "post": {
+ *     "title": "string",
+ *     "slug": "string",
+ *     "excerpt": "string",
+ *     "feature_image": "string|null",
+ *     "published_at": "string|null",
+ *     "url": "string",
+ *     "reading_time": "number"
+ *   }
  * }
  *
- * On error:
+ * Resposta de erro (503):
  * {
  *   "success": false,
- *   "error": "Error message"
+ *   "error": "string"
  * }
  */
-router.get('/', async (req, res) => {
-  console.log('[LatestPost] GET /api/latest-post called');
-
+router.get('/', async (_req, res) => {
   try {
     const post = await fetchLatestPost();
 
-    return res.json({
+    res.json({
       success: true,
-      post: {
-        title: post.title,
-        slug: post.slug,
-        excerpt: post.excerpt,
-        feature_image: post.feature_image,
-        published_at: post.published_at,
-        url: post.url,
-        reading_time: post.reading_time,
-      },
+      post,
     });
   } catch (err) {
-    console.error('[LatestPost] Error fetching latest post:', err.message);
+    console.error('[LatestPost] Error:', err.message);
 
-    return res.status(503).json({
+    res.status(503).json({
       success: false,
-      error: err.message || 'Ghost CMS is temporarily unavailable. Please try again later.',
+      error: err.message || 'Ghost CMS is temporarily unavailable.',
     });
   }
 });
