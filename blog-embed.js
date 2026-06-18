@@ -1,49 +1,33 @@
 /**
  * blog-embed.js
- * Carrega o post mais recente do blog via API Ghost CMS.
- * Cache em localStorage, timeout, fallback robusto e tratamento de erros.
- * 
+ *
+ * Busca o post mais recente do blog diretamente do RSS nativo do Ghost CMS.
+ * Sem backend Node.js, sem API intermediária.
+ *
  * Fluxo:
- *   1. Tenta API (múltiplas URLs em fallback) → se OK, renderiza e atualiza cache
- *   2. Se API falha → tenta cache localStorage → se tem cache, usa
- *   3. Se cache vazio → tenta fallback.json (NUNCA salva fallback no cache)
- * 
- * CORREÇÃO 2026-06-16:
- *   - Fallback JAMAIS sobrescreve cache válido
- *   - Comparação de published_at para atualizar cache apenas com dados mais recentes
- *   - Logs de depuração no console
- *   - silent mode respeitado para evitar flicker
- *   - Retry automático em caso de falha com múltiplas URLs
- *   - Código legado removido
- * 
- * Versão: 2026-06-16 (FIX)
+ *   1. Tenta fetch('/rss/') via nginx proxy → Ghost → RSS XML
+ *   2. Se OK → parseia XML com DOMParser → extrai dados → renderiza → atualiza cache
+ *   3. Se falha → tenta cache localStorage
+ *   4. Se cache vazio → tenta data/blog-fallback.json
+ *   5. Se tudo falhar → renderiza card estático "Visite nosso blog"
+ *
+ * O fallback NUNCA sobrescreve o cache em localStorage.
+ * O cache só é atualizado com dados da requisição bem-sucedida ao RSS.
+ *
+ * Versão: 2026-06-17 (RSS Native)
  */
 (function () {
   'use strict';
 
   // ─── Configurações ───────────────────────────────────────────────
-  // Estratégia: múltiplas URLs em ordem de preferência
-  // 1. Tenta diretamente a API (api.ybyracasting.com)
-  // 2. Se falhar, tenta via nginx proxy (mesmo domínio, /api/latest-post)
-  // Isso evita problemas de CORS e DNS
-  var API_URLS;
-  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-    API_URLS = [
-      'http://localhost:3001/api/latest-post'
-    ];
-  } else {
-    API_URLS = [
-      'https://api.ybyracasting.com/api/latest-post',
-      '/api/latest-post'  // fallback via nginx proxy no mesmo domínio
-    ];
-  }
-
+  var RSS_URL = '/rss/';
   var CACHE_KEY = 'ybyra_latest_post_v2';
-  var CACHE_TTL = 1000 * 60 * 60; // 1 hora (máximo, mas published_at tem prioridade)
-  var FETCH_TIMEOUT = 15000; // 15s para rede lenta
+  var FETCH_TIMEOUT = 15000; // 15s
 
   // ─── DOM helpers ─────────────────────────────────────────────────
-  function root() { return document.getElementById('blog-featured-root'); }
+  function root() {
+    return document.getElementById('blog-featured-root');
+  }
 
   // ─── Log de depuração ─────────────────────────────────────────────
   var DEBUG = true;
@@ -67,28 +51,48 @@
       var data = JSON.parse(raw);
       if (!data || !data.ts || !data.payload) return null;
       return data;
-    } catch (_) { return null; }
+    } catch (_) {
+      return null;
+    }
   }
 
   function setCached(payload) {
     try {
-      // Só salva se tiver um título válido (nunca salva fallback ou dados vazios)
       if (!payload || !payload.title || payload.title.length === 0) return;
-      
-      // Verifica se o cache existente é MAIS NOVO que o novo payload
+
+      // Não sobrescreve cache com dados mais antigos
       var existing = getCached();
-      if (existing && existing.payload && existing.payload.published_at && payload.published_at) {
+      if (
+        existing &&
+        existing.payload &&
+        existing.payload.published_at &&
+        payload.published_at
+      ) {
         var existingDate = new Date(existing.payload.published_at).getTime();
         var newDate = new Date(payload.published_at).getTime();
-        if (!isNaN(existingDate) && !isNaN(newDate) && existingDate >= newDate) {
-          log('cache', '(ignorado - cache existente é mais recente ou igual)', existing.payload.published_at, 'cache_mais_recente');
+        if (
+          !isNaN(existingDate) &&
+          !isNaN(newDate) &&
+          existingDate >= newDate
+        ) {
+          log(
+            'cache',
+            '(ignorado - cache existente é mais recente)',
+            existing.payload.published_at,
+            'cache_mais_recente'
+          );
           return;
         }
       }
 
-      localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), payload: payload }));
+      localStorage.setItem(
+        CACHE_KEY,
+        JSON.stringify({ ts: Date.now(), payload: payload })
+      );
       log('cache_atualizado', payload.title, payload.published_at, 'ok');
-    } catch (_) { /* quota exceeded */ }
+    } catch (_) {
+      /* quota exceeded */
+    }
   }
 
   // ─── Utilitários ─────────────────────────────────────────────────
@@ -107,16 +111,22 @@
   function formatDate(iso) {
     try {
       return new Date(iso).toLocaleDateString('pt-BR', {
-        day: '2-digit', month: 'long', year: 'numeric'
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric'
       });
-    } catch (_) { return iso || ''; }
+    } catch (_) {
+      return iso || '';
+    }
   }
 
-  // ─── Fetch com timeout (COMPAT: sem spread operator ES6) ───────────
+  // ─── Fetch com timeout ────────────────────────────────────────────
   function fetchWithTimeout(url, ms) {
     ms = ms || FETCH_TIMEOUT;
     var controller = new AbortController();
-    var id = setTimeout(function () { controller.abort(); }, ms);
+    var id = setTimeout(function () {
+      controller.abort();
+    }, ms);
     return fetch(url, { signal: controller.signal, cache: 'no-cache' })
       .then(function (res) {
         clearTimeout(id);
@@ -128,43 +138,91 @@
       });
   }
 
-  // ─── Fetch com fallback de URLs ──────────────────────────────────
-  // Tenta cada URL em sequência até uma funcionar
-  function fetchWithFallback(urls, ms) {
-    ms = ms || FETCH_TIMEOUT;
-    var index = 0;
-    
-    function tryNext() {
-      if (index >= urls.length) {
-        return Promise.reject(new Error('Todas as URLs falharam'));
-      }
-      var url = urls[index];
-      index++;
-      log('tentando_url', url, null, index + '/' + urls.length);
-      return fetchWithTimeout(url, ms).then(function (res) {
-        if (!res.ok) {
-          if (index < urls.length) {
-            log('url_falhou', url + ' status ' + res.status, null, 'tentando_proxima');
-            return tryNext();
-          }
-          throw new Error('HTTP ' + res.status);
-        }
-        return res;
-      }).catch(function (err) {
-        if (index < urls.length) {
-          log('url_erro', url + ' ' + err.message, null, 'tentando_proxima');
-          return tryNext();
-        }
-        throw err;
-      });
+  // ─── Parser de RSS ───────────────────────────────────────────────
+  /**
+   * Parseia XML RSS do Ghost e extrai o primeiro post.
+   *
+   * Estrutura esperada do RSS do Ghost:
+   * <rss>
+   *   <channel>
+   *     <item>
+   *       <title>Título</title>
+   *       <link>https://...</link>
+   *       <description>Excerpt em HTML</description>
+   *       <pubDate>RFC 2822 date</pubDate>
+   *       <enclosure url="https://..." type="image/..." />
+   *       <dc:creator>Autor</dc:creator>
+   *     </item>
+   *   </channel>
+   * </rss>
+   */
+  function parseRssToPost(xmlText) {
+    var parser = new DOMParser();
+    var xml = parser.parseFromString(xmlText, 'text/xml');
+
+    // Verifica erro de parse
+    var parseError = xml.querySelector('parsererror');
+    if (parseError) {
+      throw new Error('Falha ao parsear RSS XML: ' + parseError.textContent);
     }
-    
-    return tryNext();
+
+    var item = xml.querySelector('channel > item');
+    if (!item) {
+      throw new Error('Nenhum item encontrado no RSS');
+    }
+
+    function getNodeText(node) {
+      return node ? node.textContent || '' : '';
+    }
+
+    // Título
+    var title = getNodeText(item.querySelector('title'));
+
+    // Link
+    var link = getNodeText(item.querySelector('link'));
+
+    // Description (excerpt em HTML)
+    var description = getNodeText(item.querySelector('description'));
+
+    // Data de publicação (RFC 2822 → ISO)
+    var pubDateRaw = getNodeText(item.querySelector('pubDate'));
+    var published_at = pubDateRaw
+      ? new Date(pubDateRaw).toISOString()
+      : null;
+
+    // Imagem destacada via <enclosure>
+    var enclosureEl = item.querySelector('enclosure');
+    var feature_image = null;
+    if (enclosureEl) {
+      var url = enclosureEl.getAttribute('url');
+      var type = enclosureEl.getAttribute('type') || '';
+      // Só aceita se for imagem
+      if (url && type.indexOf('image/') === 0) {
+        feature_image = url;
+      }
+    }
+
+    // Slug extraído do link (último segmento da URL)
+    var slug = '';
+    try {
+      var urlParts = link.split('/').filter(Boolean);
+      slug = urlParts[urlParts.length - 1] || '';
+    } catch (_) {
+      slug = '';
+    }
+
+    return {
+      title: title,
+      slug: slug,
+      excerpt: truncate(stripHtml(description), 260),
+      feature_image: feature_image,
+      published_at: published_at,
+      url: link,
+      reading_time: 0 // RSS não fornece tempo de leitura
+    };
   }
 
   // ─── Fallback local (blog-fallback.json) ─────────────────────────
-  // ATENÇÃO: Este fallback NUNCA é salvo no localStorage.
-  // Ele é usado APENAS quando a API E o cache estão indisponíveis.
   function loadLocalFallback() {
     return fetchWithTimeout('./data/blog-fallback.json', 5000)
       .then(function (res) {
@@ -176,17 +234,23 @@
           var post = data[0];
           return {
             title: post.title?.rendered || post.title || '',
-            excerpt: post.excerpt?.rendered || post.excerpt || '',
-            feature_image: post.feature_image || (post._embedded?.['wp:featuredmedia']?.[0]?.source_url) || null,
+            excerpt:
+              post.excerpt?.rendered || post.excerpt || '',
+            feature_image:
+              post.feature_image ||
+              (post._embedded?.['wp:featuredmedia']?.[0]?.source_url) ||
+              null,
             url: post.link || post.url || 'https://blog.ybyracasting.com',
             published_at: post.date || post.published_at || null,
-            reading_time: post.reading_time || 0,
+            reading_time: 0,
             slug: post.slug || ''
           };
         }
         return null;
       })
-      .catch(function () { return null; });
+      .catch(function () {
+        return null;
+      });
   }
 
   // ─── Render ──────────────────────────────────────────────────────
@@ -194,9 +258,12 @@
     var container = document.createElement('article');
     container.className = 'blog-featured loaded';
 
-    var imgUrl = post.feature_image || post.feature_image_url || '';
+    var imgUrl = post.feature_image || '';
     if (imgUrl) {
-      container.style.setProperty('--featured-image', "url('" + imgUrl.replace(/'/g, '%27') + "')");
+      container.style.setProperty(
+        '--featured-image',
+        "url('" + imgUrl.replace(/'/g, '%27') + "')"
+      );
       container.classList.add('has-featured-image');
     }
 
@@ -208,17 +275,21 @@
     tag.textContent = 'Notícias';
 
     var h3 = document.createElement('h3');
-    h3.textContent = stripHtml(post.title || post.title?.rendered || '');
+    h3.textContent = stripHtml(post.title || '');
 
     var excerpt = document.createElement('p');
-    var rawExcerpt = post.excerpt || post.excerpt?.rendered || '';
-    excerpt.textContent = truncate(stripHtml(rawExcerpt), 260);
+    excerpt.textContent = post.excerpt || '';
 
     var meta = document.createElement('div');
     meta.className = 'featured-meta';
-    var dateStr = post.published_at ? formatDate(post.published_at) : '';
-    var readTime = post.reading_time ? post.reading_time + ' min de leitura' : '';
-    meta.textContent = [dateStr, readTime].filter(Boolean).join(' • ');
+    var dateStr = post.published_at
+      ? formatDate(post.published_at)
+      : '';
+    // reading_time não está disponível no RSS — omitido
+
+    if (dateStr) {
+      meta.textContent = dateStr;
+    }
 
     var ctaWrap = document.createElement('div');
     ctaWrap.className = 'blog-cta-wrapper';
@@ -255,7 +326,8 @@
     h3.textContent = 'Visite nosso blog';
 
     var p = document.createElement('p');
-    p.textContent = 'Fique por dentro das novidades do Ybyrá Casting. Acesse nosso blog para conferir artigos, notícias e conteúdos exclusivos do setor audiovisual.';
+    p.textContent =
+      'Fique por dentro das novidades do Ybyrá Casting. Acesse nosso blog para conferir artigos, notícias e conteúdos exclusivos do setor audiovisual.';
 
     var ctaWrap = document.createElement('div');
     ctaWrap.className = 'blog-cta-wrapper';
@@ -276,7 +348,7 @@
     return container;
   }
 
-  // ─── API fetch principal ─────────────────────────────────────────
+  // ─── Fetch RSS principal ─────────────────────────────────────────
   var isFetching = false;
 
   function fetchAndRender(silent) {
@@ -286,64 +358,80 @@
     }
     isFetching = true;
 
-    var fetchStart = Date.now();
-
-    // Usa fetchWithFallback para tentar múltiplas URLs
-    fetchWithFallback(API_URLS, FETCH_TIMEOUT)
+    fetchWithTimeout(RSS_URL, FETCH_TIMEOUT)
       .then(function (res) {
-        return res.json();
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return res.text();
       })
-      .then(function (json) {
-        if (!json || !json.success || !json.post) {
-          throw new Error('Resposta inválida da API');
-        }
-        var post = json.post;
-        log('api', post.title, post.published_at, '200');
+      .then(function (xmlText) {
+        var post = parseRssToPost(xmlText);
+        log('rss', post.title, post.published_at, '200');
 
-        // Atualiza cache (com validação de data - só se for mais recente)
+        // Atualiza cache apenas com dados do RSS (nunca com fallback)
         setCached(post);
 
         // Renderiza
         var el = buildCard(post);
         var r = root();
-        if (r) { r.innerHTML = ''; r.appendChild(el); }
+        if (r) {
+          r.innerHTML = '';
+          r.appendChild(el);
+        }
         isFetching = false;
       })
       .catch(function (err) {
-        log('api_falha', err.message, null, 'buscando_cache');
+        log('rss_falha', err.message, null, 'buscando_cache');
 
-        // Tenta cache primeiro (NUNCA salva fallback no cache)
+        // Tenta cache localStorage primeiro
         var cached = getCached();
         if (cached && cached.payload) {
-          log('cache', cached.payload.title, cached.payload.published_at, 'usando_cache');
+          log(
+            'cache',
+            cached.payload.title,
+            cached.payload.published_at,
+            'usando_cache'
+          );
           var el = buildCard(cached.payload);
           var r = root();
-          if (r) { r.innerHTML = ''; r.appendChild(el); }
+          if (r) {
+            r.innerHTML = '';
+            r.appendChild(el);
+          }
           isFetching = false;
           return;
         }
 
-        // Se não tem cache, tenta fallback local (NUNCA salva no localStorage)
-        loadLocalFallback().then(function (adaptedPost) {
-          var r = root();
-          if (r) {
-            if (adaptedPost) {
-              log('fallback', adaptedPost.title, adaptedPost.published_at, 'usando_fallback');
-              r.innerHTML = '';
-              r.appendChild(buildCard(adaptedPost));
-            } else {
-              log('fallback', 'Nenhum dado disponível', null, 'fallback_vazio');
+        // Se não tem cache, tenta fallback local
+        loadLocalFallback()
+          .then(function (adaptedPost) {
+            var r = root();
+            if (r) {
+              if (adaptedPost) {
+                log(
+                  'fallback',
+                  adaptedPost.title,
+                  adaptedPost.published_at,
+                  'usando_fallback'
+                );
+                r.innerHTML = '';
+                r.appendChild(buildCard(adaptedPost));
+              } else {
+                log('fallback', 'Nenhum dado disponível', null, 'fallback_vazio');
+                r.innerHTML = '';
+                r.appendChild(buildFallbackStatic());
+              }
+            }
+            isFetching = false;
+          })
+          .catch(function () {
+            log('fallback', 'Erro ao carregar fallback', null, 'erro');
+            var r = root();
+            if (r) {
               r.innerHTML = '';
               r.appendChild(buildFallbackStatic());
             }
-          }
-          isFetching = false;
-        }).catch(function () {
-          log('fallback', 'Erro ao carregar fallback', null, 'erro');
-          var r = root();
-          if (r) { r.innerHTML = ''; r.appendChild(buildFallbackStatic()); }
-          isFetching = false;
-        });
+            isFetching = false;
+          });
       });
   }
 
@@ -352,18 +440,17 @@
     var r = root();
     if (!r) return;
 
-    // 1º: Tenta mostrar cache imediatamente (apenas se existir)
+    // 1º: Mostra cache imediatamente se existir (evita flicker)
     var cached = getCached();
     if (cached && cached.payload) {
       log('inicial', cached.payload.title, cached.payload.published_at, 'cache');
       r.innerHTML = '';
       r.appendChild(buildCard(cached.payload));
     } else {
-      log('inicial', 'Sem cache, aguardando API', null, 'skeleton');
+      log('inicial', 'Sem cache, aguardando RSS', null, 'skeleton');
     }
 
-    // 2º: Sempre tenta refresh em background (com um pequeno delay)
-    // para não bloquear o rendering inicial
+    // 2º: Sempre tenta refresh em background
     setTimeout(function () {
       fetchAndRender(!!cached);
     }, 100);
