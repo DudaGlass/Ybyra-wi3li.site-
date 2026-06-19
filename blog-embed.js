@@ -20,7 +20,9 @@
   'use strict';
 
   // ─── Configurações ───────────────────────────────────────────────
-  var RSS_URL = '/rss/';
+  var RSS_URL_PROXY = '/rss/'; // Proxy nginx direto para RSS externo
+  var RSS_URL_PROXY_NODE = '/rss-proxy/'; // Proxy Node.js (fallback)
+  var RSS_URL_DIRECT = 'https://blog.ybyracasting.com/rss/'; // Direto (último recurso)
   var CACHE_KEY = 'ybyra_latest_post_v2';
   var FETCH_TIMEOUT = 15000; // 15s
 
@@ -358,14 +360,15 @@
     }
     isFetching = true;
 
-    fetchWithTimeout(RSS_URL, FETCH_TIMEOUT)
+    // Tenta primeiro o proxy nginx direto
+    fetchWithTimeout(RSS_URL_PROXY, FETCH_TIMEOUT)
       .then(function (res) {
         if (!res.ok) throw new Error('HTTP ' + res.status);
         return res.text();
       })
       .then(function (xmlText) {
         var post = parseRssToPost(xmlText);
-        log('rss', post.title, post.published_at, '200');
+        log('rss_proxy_nginx', post.title, post.published_at, '200');
 
         // Atualiza cache apenas com dados do RSS (nunca com fallback)
         setCached(post);
@@ -379,58 +382,110 @@
         }
         isFetching = false;
       })
-      .catch(function (err) {
-        log('rss_falha', err.message, null, 'buscando_cache');
+      .catch(function (nginxErr) {
+        log('rss_proxy_nginx_falha', nginxErr.message, null, 'tentando_proxy_node');
 
-        // Tenta cache localStorage primeiro
-        var cached = getCached();
-        if (cached && cached.payload) {
-          log(
-            'cache',
-            cached.payload.title,
-            cached.payload.published_at,
-            'usando_cache'
-          );
-          var el = buildCard(cached.payload);
-          var r = root();
-          if (r) {
-            r.innerHTML = '';
-            r.appendChild(el);
-          }
-          isFetching = false;
-          return;
-        }
-
-        // Se não tem cache, tenta fallback local
-        loadLocalFallback()
-          .then(function (adaptedPost) {
-            var r = root();
-            if (r) {
-              if (adaptedPost) {
-                log(
-                  'fallback',
-                  adaptedPost.title,
-                  adaptedPost.published_at,
-                  'usando_fallback'
-                );
-                r.innerHTML = '';
-                r.appendChild(buildCard(adaptedPost));
-              } else {
-                log('fallback', 'Nenhum dado disponível', null, 'fallback_vazio');
-                r.innerHTML = '';
-                r.appendChild(buildFallbackStatic());
-              }
-            }
-            isFetching = false;
+        // Se proxy nginx falhar, tenta proxy Node.js
+        fetchWithTimeout(RSS_URL_PROXY_NODE, FETCH_TIMEOUT)
+          .then(function (res) {
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            return res.text();
           })
-          .catch(function () {
-            log('fallback', 'Erro ao carregar fallback', null, 'erro');
+          .then(function (xmlText) {
+            var post = parseRssToPost(xmlText);
+            log('rss_proxy_node', post.title, post.published_at, '200');
+
+            // Atualiza cache apenas com dados do RSS (nunca com fallback)
+            setCached(post);
+
+            // Renderiza
+            var el = buildCard(post);
             var r = root();
             if (r) {
               r.innerHTML = '';
-              r.appendChild(buildFallbackStatic());
+              r.appendChild(el);
             }
             isFetching = false;
+          })
+          .catch(function (nodeErr) {
+            log('rss_proxy_node_falha', nodeErr.message, null, 'tentando_direto');
+
+            // Se proxy Node.js falhar, tenta fetch direto (pode falhar por CORS)
+            fetchWithTimeout(RSS_URL_DIRECT, FETCH_TIMEOUT)
+              .then(function (res) {
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                return res.text();
+              })
+              .then(function (xmlText) {
+                var post = parseRssToPost(xmlText);
+                log('rss_direto', post.title, post.published_at, '200');
+
+                // Atualiza cache apenas com dados do RSS (nunca com fallback)
+                setCached(post);
+
+                // Renderiza
+                var el = buildCard(post);
+                var r = root();
+                if (r) {
+                  r.innerHTML = '';
+                  r.appendChild(el);
+                }
+                isFetching = false;
+              })
+              .catch(function (directErr) {
+                log('rss_direto_falha', directErr.message, null, 'buscando_cache');
+
+                // Tenta cache localStorage primeiro
+                var cached = getCached();
+                if (cached && cached.payload) {
+                  log(
+                    'cache',
+                    cached.payload.title,
+                    cached.payload.published_at,
+                    'usando_cache'
+                  );
+                  var el = buildCard(cached.payload);
+                  var r = root();
+                  if (r) {
+                    r.innerHTML = '';
+                    r.appendChild(el);
+                  }
+                  isFetching = false;
+                  return;
+                }
+
+                // Se não tem cache, tenta fallback local
+                loadLocalFallback()
+                  .then(function (adaptedPost) {
+                    var r = root();
+                    if (r) {
+                      if (adaptedPost) {
+                        log(
+                          'fallback',
+                          adaptedPost.title,
+                          adaptedPost.published_at,
+                          'usando_fallback'
+                        );
+                        r.innerHTML = '';
+                        r.appendChild(buildCard(adaptedPost));
+                      } else {
+                        log('fallback', 'Nenhum dado disponível', null, 'fallback_vazio');
+                        r.innerHTML = '';
+                        r.appendChild(buildFallbackStatic());
+                      }
+                    }
+                    isFetching = false;
+                  })
+                  .catch(function () {
+                    log('fallback', 'Erro ao carregar fallback', null, 'erro');
+                    var r = root();
+                    if (r) {
+                      r.innerHTML = '';
+                      r.appendChild(buildFallbackStatic());
+                    }
+                    isFetching = false;
+                  });
+              });
           });
       });
   }

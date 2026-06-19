@@ -1,0 +1,16 @@
+{
+  "name": "ybyra-rss-proxy",
+  "version": "1.0.0",
+  "description": "Proxy RSS para Ybyrá Casting",
+  "main": "proxy-server.js",
+  "scripts": {
+    "start": "node proxy-server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
