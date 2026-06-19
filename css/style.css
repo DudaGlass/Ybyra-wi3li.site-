@@ -583,7 +583,7 @@ nav#navbar { position: fixed; top: 0; width: 100%; z-index: 100; background: tra
   background-color: #0f0b08;
   background-image:
     linear-gradient(180deg, rgba(20, 18, 16, 0.78), rgba(52, 41, 35, 0.62)),
-    url("../media/sobre.png");
+    url("../media/sobre.webp");
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
@@ -1026,7 +1026,7 @@ nav#navbar { position: fixed; top: 0; width: 100%; z-index: 100; background: tra
   color: #8f6c58;
 }
 /* =====================================================
-   BLOG FEATURED CARD — Design premium com sobre.png
+   BLOG FEATURED CARD — Design premium com sobre.webp
    Card de notícias com imagem de fundo, glassmorphism,
    gradientes e hover elegante.
    ===================================================== */
@@ -1051,7 +1051,7 @@ nav#navbar { position: fixed; top: 0; width: 100%; z-index: 100; background: tra
   inset: -10px; /* extra para evitar bordas no hover zoom */
   background:
     linear-gradient(180deg, rgba(15,11,8,0.40) 0%, rgba(15,11,8,0.55) 50%, rgba(15,11,8,0.70) 100%),
-    url("../media/sobre.png");
+    url("../media/sobre.webp");
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
@@ -1086,7 +1086,7 @@ nav#navbar { position: fixed; top: 0; width: 100%; z-index: 100; background: tra
 .blog-featured.has-featured-image::before {
   background:
     linear-gradient(180deg, rgba(15,11,8,0.40) 0%, rgba(15,11,8,0.55) 50%, rgba(15,11,8,0.70) 100%),
-    var(--featured-image, url("../media/sobre.png"));
+    var(--featured-image, url("../media/sobre.webp"));
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
