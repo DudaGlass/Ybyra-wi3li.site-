@@ -787,6 +787,13 @@ nav#navbar { position: fixed; top: 0; width: 100%; z-index: 100; background: tra
     justify-content: center;
   }
   
+  /* Imagem de fundo: deslocada ligeiramente para a esquerda a partir da direita
+     (85% = um pouco à esquerda de "right center") para melhorar o
+     enquadramento e reduzir o corte do personagem */
+  .sobre::after {
+    background-position: 85% center;
+  }
+  
   .sobre-content {
     padding: 2rem;
     max-width: 100%;
@@ -810,12 +817,18 @@ nav#navbar { position: fixed; top: 0; width: 100%; z-index: 100; background: tra
     flex-wrap: wrap;
   }
   
+  /* Botões mobile – altura automática, texto quebrável em 2 linhas,
+     fonte legível, ocupam toda largura disponível */
   .sobre-btn {
-    padding: 0.7rem 1.4rem;
-    height: 48px;
-    font-size: 0.6rem;
-    flex: 1 1 calc(33.333% - 0.6rem);
-    min-width: 120px;
+    padding: 0.9rem 1.2rem;
+    height: auto;
+    min-height: 54px;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    white-space: normal;
+    flex: 1 1 100%;
+    min-width: 0;
+    width: 100%;
   }
 }
 
@@ -841,13 +854,19 @@ nav#navbar { position: fixed; top: 0; width: 100%; z-index: 100; background: tra
     gap: 0.6rem;
   }
   
+  /* Botões em telas muito pequenas – altura automática,
+     fonte levemente reduzida, mas ainda legível, ocupam 100% */
   .sobre-btn {
-    padding: 0.65rem 1.2rem;
-    height: 46px;
-    font-size: 0.55rem;
-    letter-spacing: 0.08em;
-    flex: 1 1 calc(33.333% - 0.4rem);
-    min-width: 100px;
+    padding: 0.85rem 1rem;
+    height: auto;
+    min-height: 50px;
+    font-size: 0.7rem;
+    line-height: 1.35;
+    white-space: normal;
+    flex: 1 1 100%;
+    min-width: 0;
+    width: 100%;
+    letter-spacing: 0.10em;
   }
 }
 .sobre-tags {
@@ -1105,10 +1124,7 @@ nav#navbar { position: fixed; top: 0; width: 100%; z-index: 100; background: tra
   text-align: center;
   padding: 2.4rem 2.8rem;
   border-radius: 24px;
-  /* Glassmorphism refinado */
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(16px) saturate(1.4);
-  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  background: rgba(15, 11, 8, 0.75);
   border: 1px solid rgba(255, 255, 255, 0.15);
   box-shadow:
     0 24px 80px rgba(0,0,0,0.35),
@@ -1124,7 +1140,7 @@ nav#navbar { position: fixed; top: 0; width: 100%; z-index: 100; background: tra
   box-shadow:
     0 40px 100px rgba(0,0,0,0.45),
     inset 0 1px 0 rgba(255,255,255,0.35);
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(15, 11, 8, 0.82);
   border-color: rgba(255, 255, 255, 0.25);
 }
 
