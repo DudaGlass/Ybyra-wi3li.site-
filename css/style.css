@@ -1070,7 +1070,7 @@ nav#navbar { position: fixed; top: 0; width: 100%; z-index: 100; background: tra
   inset: -10px; /* extra para evitar bordas no hover zoom */
   background:
     linear-gradient(180deg, rgba(15,11,8,0.40) 0%, rgba(15,11,8,0.55) 50%, rgba(15,11,8,0.70) 100%),
-    url("../media/sobre.webp");
+    url("../media/blog-image.webp");
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
@@ -1079,48 +1079,12 @@ nav#navbar { position: fixed; top: 0; width: 100%; z-index: 100; background: tra
   pointer-events: none;
 }
 
-@supports (background-image: url("x.webp")) {
-  .blog-featured::before {
-    background:
-      linear-gradient(180deg, rgba(15,11,8,0.40) 0%, rgba(15,11,8,0.55) 50%, rgba(15,11,8,0.70) 100%),
-      url("../media/sobre.webp");
-    background-size: cover;
-    background-position: center center;
-    background-repeat: no-repeat;
-  }
-}
 
-.blog-featured:hover {
-  box-shadow:
-    0 50px 120px rgba(34,24,18,0.18),
-    inset 0 1px 0 rgba(255,255,255,0.12);
-}
-
-.blog-featured:hover::before {
-  transform: scale(1.08);
-  filter: brightness(1.05) saturate(1.1);
-}
-
-/* ─── Featured image from blog post ──────────────────── */
-.blog-featured.has-featured-image::before {
-  background:
-    linear-gradient(180deg, rgba(15,11,8,0.40) 0%, rgba(15,11,8,0.55) 50%, rgba(15,11,8,0.70) 100%),
-    var(--featured-image, url("../media/sobre.webp"));
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
-}
-
-.featured-overlay {
-  display: none;
-}
 
 .featured-copy {
   position: relative;
   z-index: 2;
   color: #fff;
-  width: min(calc(100% - 4rem), 780px);
-  max-width: 780px;
   text-align: center;
   padding: 2.4rem 2.8rem;
   border-radius: 24px;
